@@ -8,6 +8,7 @@ const NumberGuessGame = () => {
   const [message, setMessage] = useState("");
   const [isWin, setIsWin] = useState(false);
   const [history, setHistory] = useState([]);
+  const [opportunity, setOpportunity] = useState(5);
 
   const handleSubmit = () => {
     console.log("타겟:", target);
@@ -18,6 +19,7 @@ const NumberGuessGame = () => {
       return;
     }
 
+    setOpportunity((prev) => prev - 1);
 
     if (num === target) {
       setMessage(`🎉 정답! ${target}입니다.`);
@@ -25,11 +27,16 @@ const NumberGuessGame = () => {
     } else if (num < target) {
       setMessage("⬆️ 더 큰 수를 입력하세요.");
       setHistory([...history, num + '⬆️']);
-
+        
     } else {
       setMessage("⬇️ 더 작은 수를 입력하세요.");
       setHistory([...history, num + '⬇️']);
 
+    }
+
+    if (opportunity - 1 === 0 && num !== target) {
+      setMessage(`💥 실패! 정답은 ${target}입니다.`);
+      setIsWin(true); // 게임 종료 상태
     }
 
     setGuess("");
@@ -40,6 +47,7 @@ const NumberGuessGame = () => {
     setMessage("");
     setIsWin(false);
     setHistory([]);
+    setOpportunity(5);
   };
 
   return (
@@ -65,6 +73,7 @@ const NumberGuessGame = () => {
       <p className="text-lg font-medium">{message}</p>
 
       <div className="w-full">
+        <h2 className="font-semibold mb-2">남은 입력 횟수 : {opportunity}</h2>
         <h2 className="font-semibold mb-2">입력 기록</h2>
         <ul className="list-disc list-inside text-sm text-gray-600">
           {history.map((num, index) => (
@@ -73,7 +82,7 @@ const NumberGuessGame = () => {
         </ul>
       </div>
 
-      {isWin && (
+      {(isWin || opportunity === 0) && (
         <button
           className="mt-4 px-5 py-2 border border-gray-400 rounded-lg hover:bg-gray-100"
           onClick={handleRestart}
