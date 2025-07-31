@@ -15,11 +15,9 @@ const NumberGuessGame = () => {
 
     const num = Number(guess);
     if (isNaN(num) || num < 1 || num > 100) {
-      setMessage("⚠️ 1부터 100 사이의 숫자를 입력하세요.");
+      setMessage("⚠️ 1부터 100 사이의 숫자를 입력하세요!");
       return;
     }
-
-    setOpportunity((prev) => prev - 1);
 
     if (num === target) {
       setMessage(`🎉 정답! ${target}입니다.`);
@@ -27,11 +25,11 @@ const NumberGuessGame = () => {
     } else if (num < target) {
       setMessage("⬆️ 더 큰 수를 입력하세요.");
       setHistory([...history, num + '⬆️']);
-        
+      setOpportunity((prev) => prev - 1);
     } else {
       setMessage("⬇️ 더 작은 수를 입력하세요.");
       setHistory([...history, num + '⬇️']);
-
+      setOpportunity((prev) => prev - 1);
     }
 
     if (opportunity - 1 === 0 && num !== target) {
